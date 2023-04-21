@@ -168,7 +168,7 @@ class RenameFile(QWidget):
         # 遍历指定文件夹下的所有图片文件
         for root, dirs, files in os.walk(path):
             i = 1
-            files.sort()  # 按名称排序
+            files.sort(key=custom_sort_func)  # 按名称排序
             for file in files:
                 # 获取文件后缀
                 suffix = os.path.splitext(file)[1]
@@ -178,9 +178,23 @@ class RenameFile(QWidget):
                 # 重命名文件
                 os.rename(os.path.join(root, file), os.path.join(root, new_name))
 
+
+# 排序规则
+def custom_sort_func(file):
+    if '_' in file:
+        return int(file.split('_')[1].split('.')[0])  # 提取文件名中间的数字
+    if '-' in file:
+        return int(file.split('-')[1].split('.')[0])  # 提取文件名中间的数字
+    if '@' in file:
+        return int(file.split('@')[1].split('.')[0])  # 提取文件名中间的数字
+    if '#' in file:
+        return int(file.split('#')[1].split('.')[0])  # 提取文件名中间的数字
+    if '*' in file:
+        return int(file.split('*')[1].split('.')[0])  # 提取文件名中间的数字
+    return file
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     my_app = RenameFile()
     sys.exit(app.exec_())
-
-
